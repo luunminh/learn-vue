@@ -11,6 +11,6 @@ export const authRoutes: RouteRecordRaw[] = [
   {
     path: authPaths.signIn,
     name: 'signIn',
-    component: () => import('./pages/SignIn.vue'),
+    component: () => import('./pages/SignIn/SignIn.vue'),
   },
 ]

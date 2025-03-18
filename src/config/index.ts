@@ -17,6 +17,12 @@ const AWS_CONFIG: AmplifyConfig = {
   },
 }
 
+const envConfig = {
+  API_URL: import.meta.env.VITE_API_URL,
+  CONNECTION_TIMEOUT: import.meta.env.VITE_CONNECTION_TIMEOUT || 30000,
+}
+
 export const appConfigs = {
   AWS_CONFIG,
+  envConfig,
 }

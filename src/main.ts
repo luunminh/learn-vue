@@ -8,15 +8,13 @@ import { createPinia } from 'pinia'
 
 import App from './App.vue'
 import router from './router'
-import { Amplify } from 'aws-amplify'
-import { appConfigs } from './config'
 import { createOnyx } from 'sit-onyx'
-
-Amplify.configure(appConfigs.AWS_CONFIG)
+import { VueQueryPlugin } from '@tanstack/vue-query'
 
 const onyx = createOnyx({ router })
 const app = createApp(App)
 
+app.use(VueQueryPlugin, { enableDevtoolsV6Plugin: true })
 app.use(createPinia())
 app.use(router)
 app.use(onyx)

@@ -1,11 +1,16 @@
 <script setup lang="ts">
 import AmplifyProvider from './provider/AmplifyProvider.vue'
+import AuthProvider from './provider/AuthProvider.vue'
 import MainLayout from './core/layouts/MainLayout.vue'
+import { OnyxToast } from 'sit-onyx'
 </script>
 
 <template>
   <amplify-provider>
-    <main-layout />
+    <auth-provider>
+      <main-layout />
+      <OnyxToast />
+    </auth-provider>
   </amplify-provider>
 </template>
 
