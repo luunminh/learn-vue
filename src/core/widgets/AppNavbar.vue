@@ -3,6 +3,7 @@ import { useAuthStore } from '@/libs/stores/auth.store'
 import { useLogout } from '@/modules/auth/api'
 import { authPaths } from '@/modules/auth/auth.route'
 import { useColorMode } from '@vueuse/core'
+import { storeToRefs } from 'pinia'
 import {
   OnyxNavBar,
   OnyxUserMenu,
@@ -11,9 +12,10 @@ import {
   OnyxButton,
 } from 'sit-onyx'
 import { useRouter } from 'vue-router'
-const { isAuth, user } = useAuthStore()
+const authStore = useAuthStore()
+const { isAuth, user } = storeToRefs(authStore)
 
-console.log({ isAuth })
+console.log({ isAuth, user })
 
 const route = useRouter()
 const { onLogout, isPending } = useLogout()

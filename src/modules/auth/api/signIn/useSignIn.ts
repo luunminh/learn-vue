@@ -9,8 +9,7 @@ export type SignInPayload = {
 
 export type SignInResponse = object
 
-const handleSignIn = ({ email, password }: SignInPayload) =>
-  signIn({ username: email, password, options: { authFlowType: 'CUSTOM_WITH_SRP' } })
+const handleSignIn = ({ email, password }: SignInPayload) => signIn({ username: email, password })
 
 export function useSignIn(options?: UseMutationOptions<SignInResponse, Error, SignInPayload>) {
   const {

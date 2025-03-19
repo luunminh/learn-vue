@@ -2,13 +2,20 @@
 import { appConfigs } from '@/config'
 import { Amplify } from 'aws-amplify'
 import { cognitoUserPoolsTokenProvider } from 'aws-amplify/auth/cognito'
-import { defaultStorage } from 'aws-amplify/utils'
+import { CookieStorage } from 'aws-amplify/utils'
 import { onBeforeMount, onMounted } from 'vue'
 
 Amplify.configure(appConfigs.AWS_CONFIG)
 
 onBeforeMount(() => {
-  cognitoUserPoolsTokenProvider.setKeyValueStorage(defaultStorage)
+  cognitoUserPoolsTokenProvider.setKeyValueStorage(
+    new CookieStorage({
+      domain: appConfigs.envConfig.DOMAIN_URL,
+      secure: false,
+      expires: 365,
+      path: '/',
+    }),
+  )
 })
 
 onMounted(() => {

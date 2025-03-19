@@ -20,7 +20,7 @@ export const useSignInForm = () => {
   const router = useRouter()
 
   const { onSignIn, isPending } = useSignIn({
-    onSuccess: () => {
+    onSuccess: (data) => {
       Hub.dispatch('auth', { event: 'signedIn' })
       toast.show({ headline: 'Sign-in successful', color: 'success', duration: 1000 })
       setTimeout(() => router.push('/'), 1000)
@@ -38,7 +38,7 @@ export const useSignInForm = () => {
     () => formValues.email,
     () => {
       const errMap = {
-        'Email is required': isEmpty(formValues.email.trim()),
+        'Email is required': isEmpty(formValues.email?.trim()),
         'Wrong email format': !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formValues.email),
       }
 
@@ -51,7 +51,7 @@ export const useSignInForm = () => {
     () => formValues.password,
     () => {
       const errMap = {
-        'Password is required': isEmpty(formValues.password.trim()),
+        'Password is required': isEmpty(formValues.password?.trim()),
         'Password must be at least 8 characters': formValues.password.length < 8,
         'Password must contain at least one number': !/\d/.test(formValues.password),
         'Password must contain at least one lowercase letter': !/[a-z]/.test(formValues.password),

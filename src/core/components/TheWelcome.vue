@@ -5,11 +5,21 @@ import ToolingIcon from './icons/IconTooling.vue'
 import EcosystemIcon from './icons/IconEcosystem.vue'
 import CommunityIcon from './icons/IconCommunity.vue'
 import SupportIcon from './icons/IconSupport.vue'
+import { useAuthStore } from '@/libs/stores/auth.store'
+import { OnyxButton } from 'sit-onyx'
+import { storeToRefs } from 'pinia'
 
 const openReadmeInEditor = () => fetch('/__open-in-editor?file=README.md')
+
+const authStore = useAuthStore()
+const { count } = storeToRefs(authStore)
 </script>
 
 <template>
+  <div>
+    <h1>count {{ count }}</h1>
+    <OnyxButton @click="authStore.increase" label="Increase" />
+  </div>
   <WelcomeItem>
     <template #icon>
       <DocumentationIcon />

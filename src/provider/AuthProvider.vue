@@ -1,12 +1,14 @@
 <script lang="ts" setup>
 import { useAuthStore } from '@/libs/stores/auth.store'
 import { useLogout } from '@/modules/auth/api'
-import { fetchAuthSession, getCurrentUser } from 'aws-amplify/auth'
+import { fetchAuthSession } from 'aws-amplify/auth'
 import { Hub } from 'aws-amplify/utils'
+import { storeToRefs } from 'pinia'
 import { onBeforeMount, onBeforeUnmount, onMounted, ref } from 'vue'
 
 const { onLogout } = useLogout()
-const { isAuth, setAuth, setUser } = useAuthStore()
+const authStore = useAuthStore()
+const { isAuth } = storeToRefs(authStore)
 
 const unsubscribe = ref<() => void>(() => {})
 
@@ -33,21 +35,15 @@ onBeforeUnmount(() => {
 })
 
 const authenticate = () => {
-  if (!isAuth) {
+  if (!isAuth.value) {
     fetchAuthSession()
       .then(async (user) => {
-        console.log({ user })
-        const userData = user?.tokens?.idToken?.toString() || {}
+        const userData = user?.tokens?.idToken?.payload || {}
 
-        console.log({ userData })
-        setAuth(true)
-        setUser(userData)
+        authStore.setAuth(true)
+        authStore.setUser(userData)
       })
       .catch(() => onLogout())
-
-    getCurrentUser().then((user) => {
-      console.log({ user })
-    })
   }
 }
 </script>
