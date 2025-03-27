@@ -17,17 +17,23 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.0.14",
     "@tanstack/vue-query": "^5.68.0",
+    "@tanstack/vue-table": "^8.21.2",
+    "@types/qs": "^6.9.18",
     "@vueuse/core": "^13.0.0",
     "apisauce": "^3.1.0",
     "aws-amplify": "^6.13.5",
     "axios": "^1.8.3",
+    "libphonenumber-js": "^1.10.26",
     "lodash-es": "^4.17.21",
     "pinia": "^3.0.1",
+    "qs": "^6.14.0",
     "sit-onyx": "1.0.0-beta.174",
+    "uuid": "^11.1.0",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0"
   },
   "devDependencies": {
+    "@sit-onyx/icons": "1.0.0-beta.14",
     "@tsconfig/node22": "^22.0.0",
     "@types/lodash-es": "^4.17.12",
     "@types/node": "^22.13.9",

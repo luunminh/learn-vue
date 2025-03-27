@@ -20,7 +20,7 @@ export function useLogout(options?: UseMutationOptions<object, Error, void>) {
     mutationFn: () => authResponseWrapper(handleLogout),
     onSuccess() {
       setAuth(false)
-      router.push('/login')
+      router.push('/sign-in')
     },
     ...options,
   })

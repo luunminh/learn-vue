@@ -18,7 +18,6 @@ export default defineConfigWithVueTs(
     name: 'app/files-to-ignore',
     ignores: ['**/dist/**', '**/dist-ssr/**', '**/coverage/**'],
   },
-
   pluginVue.configs['flat/essential'],
   vueTsConfigs.recommended,
   ...oxlint.configs['flat/recommended'],

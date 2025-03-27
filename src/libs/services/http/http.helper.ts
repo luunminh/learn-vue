@@ -11,7 +11,7 @@ export async function responseWrapper<T>(func: ApiCall, [...args]: any[] = []): 
       const response = (await func(...args)) || {}
       if (response.ok) res(response.data)
       if (response?.originalError?.message === 'CONNECTION_TIMEOUT') {
-        console.error('Connection timeout. Please check your network and try again.')
+        throw Error('Connection timeout. Please check your network and try again.')
       }
       rej(response.data)
     } catch (err) {
@@ -83,7 +83,7 @@ export const configApiInstance = (api: ApisauceInstance) => {
   api.axiosInstance.interceptors.response.use(undefined, async (error) => {
     if (error.response.status === 401) {
       await signOut()
-      window.location.href = '/login'
+      window.location.href = '/sign-in'
     }
     return Promise.reject(error)
   })

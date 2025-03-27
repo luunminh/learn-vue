@@ -6,18 +6,65 @@ import EcosystemIcon from './icons/IconEcosystem.vue'
 import CommunityIcon from './icons/IconCommunity.vue'
 import SupportIcon from './icons/IconSupport.vue'
 import { useAuthStore } from '@/libs/stores/auth.store'
-import { OnyxButton } from 'sit-onyx'
+import { OnyxButton, OnyxTab, OnyxTabs } from 'sit-onyx'
 import { storeToRefs } from 'pinia'
+import { ref, watch } from 'vue'
+import { useRouter } from 'vue-router'
+import { uamPaths } from '@/modules/uam/uam.route'
+
+enum Tab {
+  USERS = 'users',
+  ROLES = 'Roles',
+}
 
 const openReadmeInEditor = () => fetch('/__open-in-editor?file=README.md')
 
+const router = useRouter()
 const authStore = useAuthStore()
-const { count } = storeToRefs(authStore)
+const { count, user, isAuth } = storeToRefs(authStore)
+
+const currentTab = ref<string>('')
+
+const getRouteByTab = (tab: Tab | string) => {
+  switch (tab) {
+    case Tab.USERS:
+      return uamPaths.userManager
+    case Tab.ROLES:
+      return uamPaths.roleManager
+    default:
+      return '/'
+  }
+}
+
+watch(
+  () => currentTab.value,
+  () => {
+    if (currentTab.value) {
+      console.log('currentTab', currentTab.value)
+      router.push(`${getRouteByTab(currentTab.value)}`)
+    }
+  },
+)
 </script>
 
 <template>
-  <div>
-    <h1>count {{ count }}</h1>
+  <div class="flex flex-col items-center py-2 gap-2">
+    <h1 class="text-xl font-bold" :v-if="isAuth">
+      Welcome back, <strong>{{ user?.fullName }}</strong>
+    </h1>
+    <OnyxTabs v-if="isAuth" label="Application Route" v-model="currentTab">
+      <OnyxTab
+        v-for="tab in Object.keys(Tab)"
+        :key="tab"
+        :label="tab"
+        :value="Tab[tab as keyof typeof Tab]"
+      >
+        {{ tab }} content
+      </OnyxTab>
+    </OnyxTabs>
+    <h1>
+      Count: <strong>{{ count }}</strong>
+    </h1>
     <OnyxButton @click="authStore.increase" label="Increase" />
   </div>
   <WelcomeItem>

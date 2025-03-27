@@ -5,7 +5,7 @@ import axios from 'axios'
 axios.defaults.withCredentials = true
 
 export const HttpService = new AxiosClient({
-  baseURL: appConfigs.envConfig.API_URL,
+  baseURL: `${appConfigs.envConfig.API_URL}/ais-svc`,
   timeout: appConfigs.envConfig.CONNECTION_TIMEOUT || 30000, // 30 seconds
   headers: { Accept: 'application/json' },
 })

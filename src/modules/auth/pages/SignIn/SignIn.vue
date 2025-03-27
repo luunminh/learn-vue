@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { OnyxButton, OnyxCard, OnyxHeadline, OnyxInput } from 'sit-onyx'
+import { OnyxButton, OnyxCard, OnyxHeadline, OnyxInput, OnyxLink } from 'sit-onyx'
 import { useSignInForm } from './useSignInForm'
 
 const { isPending, formValues, onValidSubmit, formErrors } = useSignInForm()

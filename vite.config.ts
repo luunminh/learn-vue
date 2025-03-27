@@ -14,6 +14,7 @@ export default defineConfig((_env: ConfigEnv) => {
       host: env.VITE_HOST,
       port: parseInt(env.VITE_PORT, 10),
     },
+    base: '/',
     resolve: {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url)),

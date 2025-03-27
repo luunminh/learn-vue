@@ -40,8 +40,13 @@ const authenticate = () => {
       .then(async (user) => {
         const userData = user?.tokens?.idToken?.payload || {}
 
+        if (!userData) return onLogout()
+
         authStore.setAuth(true)
-        authStore.setUser(userData)
+        authStore.setUser({
+          ...userData,
+          fullName: `${userData.given_name} ${userData.family_name}`,
+        })
       })
       .catch(() => onLogout())
   }

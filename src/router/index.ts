@@ -1,9 +1,15 @@
-import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
+import { createRouter, createWebHistory, useRoute, type RouteRecordRaw } from 'vue-router'
 import HomeView from '../modules/HomeView.vue'
-import { authRoutes } from '@/modules/auth/auth.route'
+import { authPaths, authRoutes } from '@/modules/auth/auth.route'
+import { uamPaths, uamRoutes } from '@/modules/uam/uam.route'
+import { useAuthStore } from '@/libs/stores/auth.store'
+import { storeToRefs } from 'pinia'
+import { REMEMBER_URL_LOCAL_KEY } from '@/core/constants'
 
-const publicRoutes = []
-const protectedRoutes = []
+const getRoute = (path: Record<string, string>) => Object.values(path)
+
+const publicRoutes: string[] = [...getRoute(authPaths)]
+const protectedRoutes: string[] = [...getRoute(uamPaths)]
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -16,15 +22,32 @@ const router = createRouter({
     {
       path: '/about',
       name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import('../modules/AboutView.vue'),
     },
     ...authRoutes,
+    ...uamRoutes,
   ],
 })
 
-const mapProtectedRoutes = (routes: RouteRecordRaw[]) => {}
+router.beforeEach((to, from, next) => {
+  const authStore = useAuthStore()
+  const { isAuth } = storeToRefs(authStore)
+
+  const isPrivate = protectedRoutes.includes(to.path)
+
+  if (isPrivate && !isAuth.value) {
+    localStorage.setItem(REMEMBER_URL_LOCAL_KEY, from.fullPath)
+    return next({ path: authPaths.signIn })
+  }
+
+  if (publicRoutes.includes(to.path) && isAuth.value) {
+    const rememberUrlLocal = localStorage.getItem(REMEMBER_URL_LOCAL_KEY)
+    const redirectUrl = rememberUrlLocal || '/'
+
+    return next({ path: redirectUrl })
+  }
+
+  next()
+})
 
 export default router

@@ -12,10 +12,9 @@ import {
   OnyxButton,
 } from 'sit-onyx'
 import { useRouter } from 'vue-router'
+
 const authStore = useAuthStore()
 const { isAuth, user } = storeToRefs(authStore)
-
-console.log({ isAuth, user })
 
 const route = useRouter()
 const { onLogout, isPending } = useLogout()
@@ -34,7 +33,7 @@ const handleSignUp = () => {
   <OnyxNavBar app-name="ML W Vue" logo-url="/mgm-logo-white.svg">
     <template #contextArea>
       <template v-if="isAuth">
-        <OnyxUserMenu :full-name="user?.fullName">
+        <OnyxUserMenu :full-name="user?.fullName || 'Anonymous'">
           <OnyxColorSchemeMenuItem v-model="colorScheme" />
           <OnyxButton label="Logout" @click="onLogout" :loading="isPending" />
         </OnyxUserMenu>
