@@ -5,6 +5,8 @@ import { uamPaths, uamRoutes } from '@/modules/uam/uam.route'
 import { useAuthStore } from '@/libs/stores/auth.store'
 import { storeToRefs } from 'pinia'
 import { REMEMBER_URL_LOCAL_KEY } from '@/core/constants'
+import { isBoolean } from 'lodash-es'
+import { fetchAuthSession } from 'aws-amplify/auth'
 
 const getRoute = (path: Record<string, string>) => Object.values(path)
 
@@ -20,6 +22,11 @@ const router = createRouter({
       component: HomeView,
     },
     {
+      path: '/splash',
+      name: 'splash',
+      component: () => import('../core/components/SplashScreen.vue'),
+    },
+    {
       path: '/about',
       name: 'about',
       component: () => import('../modules/AboutView.vue'),
@@ -28,23 +35,32 @@ const router = createRouter({
     ...uamRoutes,
   ],
 })
-
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
   const { isAuth } = storeToRefs(authStore)
 
   const isPrivate = protectedRoutes.includes(to.path)
+  const isPublic = publicRoutes.includes(to.path)
 
-  if (isPrivate && !isAuth.value) {
-    localStorage.setItem(REMEMBER_URL_LOCAL_KEY, from.fullPath)
-    return next({ path: authPaths.signIn })
+  if (isAuth.value === null) {
+    if (to.path !== '/splash') {
+      localStorage.setItem(REMEMBER_URL_LOCAL_KEY, to.fullPath) // Store the intended route
+      return next({ path: '/splash' }) // Redirect to splash screen
+    }
+
+    await authStore.fetchAuthStore()
+    const rememberUrl = localStorage.getItem(REMEMBER_URL_LOCAL_KEY) || '/'
+    return next({ path: rememberUrl }) // Redirect to the intended route or home
   }
 
-  if (publicRoutes.includes(to.path) && isAuth.value) {
-    const rememberUrlLocal = localStorage.getItem(REMEMBER_URL_LOCAL_KEY)
-    const redirectUrl = rememberUrlLocal || '/'
+  if (isPrivate && !isAuth.value && isBoolean(isAuth.value)) {
+    localStorage.setItem(REMEMBER_URL_LOCAL_KEY, to.fullPath) // Store the intended route
+    return next({ path: authPaths.signIn }) // Redirect to login
+  }
 
-    return next({ path: redirectUrl })
+  if (isPublic && isAuth.value && isBoolean(isAuth.value)) {
+    const rememberUrl = localStorage.getItem(REMEMBER_URL_LOCAL_KEY) || '/'
+    return next({ path: rememberUrl }) // Redirect to the remembered route or home
   }
 
   next()

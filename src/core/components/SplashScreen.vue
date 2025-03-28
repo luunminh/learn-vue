@@ -4,9 +4,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
-// You can add props or logic here if needed
-</script>
+<script lang="ts" setup></script>
 
 <style scoped>
 .splash-screen {

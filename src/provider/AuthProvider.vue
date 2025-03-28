@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { useAuthStore } from '@/libs/stores/auth.store'
+import { isEmpty } from '@/libs/utils'
 import { useLogout } from '@/modules/auth/api'
 import { fetchAuthSession } from 'aws-amplify/auth'
 import { Hub } from 'aws-amplify/utils'
@@ -39,8 +40,7 @@ const authenticate = () => {
     fetchAuthSession()
       .then(async (user) => {
         const userData = user?.tokens?.idToken?.payload || {}
-
-        if (!userData) return onLogout()
+        if (isEmpty(userData)) return onLogout()
 
         authStore.setAuth(true)
         authStore.setUser({
