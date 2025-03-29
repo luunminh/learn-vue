@@ -41,7 +41,7 @@ const QueryKey = {
 }
 
 export function useGetUsers(
-  options?: UseQueryOptions<PaginationResponseType<GetUsersResponse>, Error>,
+  options?: Partial<UseQueryOptions<PaginationResponseType<GetUsersResponse>, Error>>,
 ) {
   const params = ref<GetUserParams>({ skip: 0, take: 10 })
 

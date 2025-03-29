@@ -115,7 +115,6 @@ const handleSortingChange = (value: SortingState) => {
 }
 
 const handlePaginationChange = (value: PaginationState) => {
-  console.log({ value })
   setOrDeleteSearchParamsByKey({
     key: TableQueryParams.PAGE,
     value: value?.pageIndex,
